@@ -1,7 +1,6 @@
-"use client"
+"use client";
 
 import Image from "next/image";
-import html2canvas from "html2canvas";
 
 const frames = {
   stainedGlass: {
@@ -32,12 +31,12 @@ const frames = {
       white: "/img/frames/m15/ub/pt/w.png",
     },
   },
-}
+};
 
 const setSymbols = {
   sldC: "/img/setSymbols/official/sld-c.svg",
-  sldR: "/img/setSymbols/official/sld-r.svg"
-}
+  sldR: "/img/setSymbols/official/sld-r.svg",
+};
 
 const textToMana = {
   "{0}": "/img/manaSymbols/0.svg",
@@ -69,7 +68,7 @@ const textToMana = {
   "{x}": "/img/manaSymbols/x.svg",
   "{y}": "/img/manaSymbols/y.svg",
   "{z}": "/img/manaSymbols/z.svg",
-}
+};
 
 /**
  * Function that will convert a string of text into images with the correct mana symbols
@@ -81,8 +80,15 @@ function textToManaSymbols(text: string) {
   const matches = text.match(regex);
   if (matches) {
     return matches.map((match) => {
-      return <Image className="inline-block" width={50} height={50}
-                    src={`${textToMana[match as keyof typeof textToMana]}`} alt="Mana Symbol"/>;
+      return (
+        <Image
+          className="inline-block"
+          width={50}
+          height={50}
+          src={`${textToMana[match as keyof typeof textToMana]}`}
+          alt="Mana Symbol"
+        />
+      );
     });
   }
   return text;
@@ -97,7 +103,7 @@ function textToManaSymbolsString(text: string) {
   const splitText = text.split(regex);
 
   if (matches) {
-    let result = '';
+    let result = "";
     for (let i = 0; i < splitText.length; i++) {
       result += splitText[i];
       if (matches[i]) {
@@ -110,32 +116,36 @@ function textToManaSymbolsString(text: string) {
 }
 
 export default function Home() {
-  const cost = "{u}{u}{b}"
+  const cost = "{u}{u}{b}";
 
-  const cardDescription = "{x} Você convence até {x} pessoas a fazer o que você quiser, não importa se a pessoa precisa morrer, matar a família ou dançar pelado.";
+  const cardDescription =
+    "{x} Você convence até {x} pessoas a fazer o que você quiser, não importa se a pessoa precisa morrer, matar a família ou dançar pelado.";
 
   const manaSymbols = textToManaSymbols(cost);
 
-
   return (
     <div className="w-screen h-screen overflow-hidden bg-gray-700 p-5">
-
-      <div style={{
-        zoom: 0.3,
-      }}>
+      <div
+        style={{
+          zoom: 0.3,
+        }}
+      >
         <div className="card --phyrexian2">
-          <div className="card-art-holder"
-               style={{
-                 backgroundImage: "url(https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/b2d47e99-12d5-48cf-930e-2d87634b17db/dg6soxp-39c2d5c2-b051-41cf-b7f6-4af8023f1bce.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2IyZDQ3ZTk5LTEyZDUtNDhjZi05MzBlLTJkODc2MzRiMTdkYlwvZGc2c294cC0zOWMyZDVjMi1iMDUxLTQxY2YtYjdmNi00YWY4MDIzZjFiY2UucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.o51l3D13bftC4wLLC2DcJB8Fln-s82B4rt34D8q2VJk)"
-               }}
+          <div
+            className="card-art-holder"
+            style={{
+              backgroundImage:
+                "url(https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/b2d47e99-12d5-48cf-930e-2d87634b17db/dg6soxp-39c2d5c2-b051-41cf-b7f6-4af8023f1bce.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2IyZDQ3ZTk5LTEyZDUtNDhjZi05MzBlLTJkODc2MzRiMTdkYlwvZGc2c294cC0zOWMyZDVjMi1iMDUxLTQxY2YtYjdmNi00YWY4MDIzZjFiY2UucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.o51l3D13bftC4wLLC2DcJB8Fln-s82B4rt34D8q2VJk)",
+            }}
           />
-          <div className="card-frame"
-               style={{
-                 backgroundImage: `url(${frames.m15.white})`,
-                 backgroundPosition: "center, top",
-                 backgroundSize: "cover, contain",
-                 backgroundRepeat: "no-repeat, no-repeat",
-               }}
+          <div
+            className="card-frame"
+            style={{
+              backgroundImage: `url(${frames.m15.white})`,
+              backgroundPosition: "center, top",
+              backgroundSize: "cover, contain",
+              backgroundRepeat: "no-repeat, no-repeat",
+            }}
           >
             <div className="card-header">
               <span className="card-name">Naruto da Casa Uzumaki</span>
@@ -147,19 +157,29 @@ export default function Home() {
             <div className="card-type">
               <span>Creature</span>
 
-              <img src={setSymbols.sldR} alt="Set Symbol" className="set-symbol"/>
+              <img
+                src={setSymbols.sldR}
+                alt="Set Symbol"
+                className="set-symbol"
+              />
             </div>
 
             <div className="card-info">
-            <span
-              className="card-info-description" dangerouslySetInnerHTML={{
-              __html: textToManaSymbolsString(cardDescription),
-            }}/>
-              <span className="card-info-flavor">Você não contava com meu talk no jutsu!!</span>
-              <div className="card-info-pt" style={{
-                backgroundImage: `url(${frames.m15.pt.white})`,
-
-              }}>
+              <span
+                className="card-info-description"
+                dangerouslySetInnerHTML={{
+                  __html: textToManaSymbolsString(cardDescription),
+                }}
+              />
+              <span className="card-info-flavor">
+                Você não contava com meu talk no jutsu!!
+              </span>
+              <div
+                className="card-info-pt"
+                style={{
+                  backgroundImage: `url(${frames.m15.pt.white})`,
+                }}
+              >
                 <span className="card-info-pt-text">10 / 20</span>
               </div>
             </div>

@@ -6,7 +6,7 @@ import { getHTML } from "./html";
 
 export async function GET(request: NextRequest) {
   // Parse the request URL to get the query parameters
-  const { searchParams } = new URL(request.url);
+  const { searchParams, host } = new URL(request.url);
 
   const name = searchParams.get("name") || "";
   const manaCost = searchParams.get("manaCost") || "";
@@ -16,6 +16,7 @@ export async function GET(request: NextRequest) {
   const description = searchParams.get("description") || "";
   const pt = searchParams.get("pt") || "";
   const frame = searchParams.get("frame") || "";
+  const isPhyrexian = searchParams.get("isPhyrexian") === "true";
 
   // Create a new instance of the Puppeteer browser
   const browser = await puppeteer.launch();
@@ -37,6 +38,8 @@ export async function GET(request: NextRequest) {
     description,
     pt,
     frame,
+    isPhyrexian,
+    host,
   });
 
   // Set the content of the page

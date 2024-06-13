@@ -1,6 +1,115 @@
-const joinUrl = (url: string) => {
-  return `http://localhost:3000${url}`;
+// import fontLoader from "next/font/local";
+
+import { getCSS } from "./card-css";
+import { clsx } from "./clsx";
+
+const joinUrl = (url: string, host: string) => {
+  return `${host}${url}`;
 };
+
+// const belerenB = localFont({
+//   src: "../../public/fonts/beleren-b.ttf",
+//   variable: "--font-beleren-b",
+// });
+
+// const belerenBsc = localFont({
+//   src: "../../public/fonts/beleren-bsc.ttf",
+//   variable: "--font-beleren-bsc",
+// });
+
+// const phyrexian = localFont({
+//   src: "../../public/fonts/mtg-phyrexian.ttf",
+//   variable: "--font-phyrexian",
+// });
+
+const frames = {
+  stainedGlass: {
+    green: "/img/frames/dmu/stainedGlass/g.png",
+    blue: "/img/frames/dmu/stainedGlass/u.png",
+    black: "/img/frames/dmu/stainedGlass/b.png",
+    red: "/img/frames/dmu/stainedGlass/r.png",
+    white: "/img/frames/dmu/stainedGlass/w.png",
+  },
+  ixalan: {
+    green: "/img/frames/ixalan/ixalanFrameG.png",
+    blue: "/img/frames/ixalan/ixalanFrameU.png",
+    black: "/img/frames/ixalan/ixalanFrameB.png",
+    red: "/img/frames/ixalan/ixalanFrameR.png",
+    white: "/img/frames/ixalan/ixalanFrameW.png",
+  },
+  m15: {
+    green: "/img/frames/m15/ub/regular/g.png",
+    blue: "/img/frames/m15/ub/regular/u.png",
+    black: "/img/frames/m15/ub/regular/b.png",
+    red: "/img/frames/m15/ub/regular/r.png",
+    white: "/img/frames/m15/ub/regular/w.png",
+    pt: {
+      green: "/img/frames/m15/ub/pt/g.png",
+      blue: "/img/frames/m15/ub/pt/u.png",
+      black: "/img/frames/m15/ub/pt/b.png",
+      red: "/img/frames/m15/ub/pt/r.png",
+      white: "/img/frames/m15/ub/pt/w.png",
+    },
+  },
+};
+
+const setSymbols = {
+  sldC: "/img/setSymbols/official/sld-c.svg",
+  sldR: "/img/setSymbols/official/sld-r.svg",
+};
+
+const textToMana = {
+  "{0}": "/img/manaSymbols/0.svg",
+  "{1}": "/img/manaSymbols/1.svg",
+  "{2}": "/img/manaSymbols/2.svg",
+  "{3}": "/img/manaSymbols/3.svg",
+  "{4}": "/img/manaSymbols/4.svg",
+  "{5}": "/img/manaSymbols/5.svg",
+  "{6}": "/img/manaSymbols/6.svg",
+  "{7}": "/img/manaSymbols/7.svg",
+  "{8}": "/img/manaSymbols/8.svg",
+  "{9}": "/img/manaSymbols/9.svg",
+  "{10}": "/img/manaSymbols/10.svg",
+  "{11}": "/img/manaSymbols/11.svg",
+  "{12}": "/img/manaSymbols/12.svg",
+  "{13}": "/img/manaSymbols/13.svg",
+  "{14}": "/img/manaSymbols/14.svg",
+  "{15}": "/img/manaSymbols/15.svg",
+  "{16}": "/img/manaSymbols/16.svg",
+  "{17}": "/img/manaSymbols/17.svg",
+  "{18}": "/img/manaSymbols/18.svg",
+  "{19}": "/img/manaSymbols/19.svg",
+  "{20}": "/img/manaSymbols/20.svg",
+  "{u}": "/img/manaSymbols/u.svg",
+  "{b}": "/img/manaSymbols/b.svg",
+  "{r}": "/img/manaSymbols/r.svg",
+  "{g}": "/img/manaSymbols/g.svg",
+  "{w}": "/img/manaSymbols/w.svg",
+  "{x}": "/img/manaSymbols/x.svg",
+  "{y}": "/img/manaSymbols/y.svg",
+  "{z}": "/img/manaSymbols/z.svg",
+};
+
+/**
+ * Similar to textToManaSymbols, but this function will return the mana symbols as HTML image strings and it will keep the text in between the mana symbols
+ */
+function textToManaSymbolsString(text: string, host: string) {
+  const regex = /{[0-9a-z]+}/g;
+  const matches = text.match(regex);
+  const splitText = text.split(regex);
+
+  if (matches) {
+    let result = "";
+    for (let i = 0; i < splitText.length; i++) {
+      result += splitText[i];
+      if (matches[i]) {
+        result += `<img style="display:inline-block;" width="40" height="40" src="${joinUrl(textToMana[matches[i] as keyof typeof textToMana], host)}" alt="Mana Symbol"/>`;
+      }
+    }
+    return result;
+  }
+  return text;
+}
 
 export const getHTML = async ({
   name,
@@ -11,6 +120,8 @@ export const getHTML = async ({
   flavor,
   description,
   pt,
+  isPhyrexian = false,
+  host,
 }: {
   name: string;
   manaCost: string;
@@ -20,6 +131,8 @@ export const getHTML = async ({
   flavor: string;
   description: string;
   pt: string;
+  isPhyrexian?: boolean;
+  host: string;
 }) => {
   //   const image = await fetch(art);
 
@@ -31,177 +144,39 @@ export const getHTML = async ({
     <!DOCTYPE html>
     <html lang="en">
       <head>
+        <link rel="stylesheet" href="http://localhost:3000/beleren/stylesheet.css">
+        <link rel="stylesheet" href="http://localhost:3000/phyrexian/stylesheet.css">
+
         <style>
-          body, html {
-            height: 2100px;
-            width: 1500px;
-            overflow: hidden;
-            margin: 0;
-            padding: 0;
-            }
+          :root {
+            --font-beleren-b: 'Beleren2016', sans-serif;
+            --font-phyrexian: 'MTG - Phyrexian';
+          }
 
-            * {
-                box-sizing: border-box;
-            }
-
-            .card {
-                --card-border-size: 1.45cm;
-                --card-name-size: 60px;
-                --card-type-size: 50px;
-                --card-name-color: #000;
-                --card-type-color: #000;
-                --card-info-color: #000;
-                --card-info-font: var(--font-beleren-b);
-                --card-info-pt-font: var(--font-beleren-b);
-                --card-info-flavor-font: arial;
-                --card-info-font-size-min: 40px;
-                --card-info-font-size-max: 50px;
-                --card-info-font-size: clamp(
-                    var(--card-info-font-size-min),
-                    var(--card-info-font-size-max),
-                    var(--card-info-font-size-max)
-                );
-
-                position: relative;
-                background-size: cover;
-                display: flex;
-                flex-direction: column;
-                gap: 0.42cm;
-                width: 1500px;
-                height: 2100px;
-                border-radius: 12mm;
-                overflow: hidden;
-            }
-
-            .card.--phyrexian {
-                --card-info-font: var(--font-phyrexian);
-                --card-info-flavor-font: var(--font-phyrexian);
-            }
-
-            .card {
-                font-family: var(--card-info-font), sans-serif;
-            }
-
-            .card-header {
-                width: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding-inline: calc(var(--card-border-size) + 4mm);
-                height: 105px;
-                margin-top: var(--card-border-size);
-            }
-
-            .card-name {
-                font-size: var(--card-name-size);
-                color: var(--card-name-color);
-            }
-
-            .card-mana-cost {
-                display: flex;
-                gap: 0.20cm;
-            }
-
-            .card-art {
-                height: 940px;
-                width: calc(100% - 2 * var(--card-border-size));
-                margin: 0 auto;
-            }
-
-            .card-type {
-                width: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                height: 110px;
-                padding-inline: calc(var(--card-border-size) + 4mm);
-                font-size: var(--card-type-size);
-                color: var(--card-type-color);
-            }
-
-            .card-frame {
-                position: absolute;
-                inset: 0;
-                background-size: cover;
-                display: flex;
-                flex-direction: column;
-                gap: 0.42cm;
-                border-radius: 12mm;
-                padding: var(--card-border-size);
-                background-image: url(${joinUrl(frame)});
-            }
-
-            .card-art-holder {
-                border-radius: 12mm;
-                inset: 0;
-                position: absolute;
-                background-repeat: no-repeat;
-                background-size: cover;
-                background-position: center;
-            }
-
-            .card-info {
-                width: 100%;
-                position: relative;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                gap: 0.425cm;
-                padding-inline: calc(var(--card-border-size) + 4mm);
-                padding-block: 0;
-                height: 640px;
-                font-size: var(--card-info-font-size);
-                color: var(--card-info-color);
-            }
-
-            .card-info-flavor {
-                font-size: calc(var(--card-info-font-size) * 0.9);
-                font-style: italic;
-                font-family: var(--card-info-flavor-font), sans-serif;
-            }
-
-            .card-info-description {
-                font-size: calc(var(--card-info-font-size) * 0.9);
-                font-family: var(--card-info-pt-font), sans-serif;
-            }
-
-            .card-info-pt {
-                position: absolute;
-                background-size: cover;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                text-align: center;
-                width: 274px;
-                height: 140px;
-                bottom: calc(var(--card-border-size) * -1);
-                right: var(--card-border-size);
-            }
-
-            .card-info-pt-text {
-                padding-left: 0.52cm;
-                font-weight: bold;
-                font-family: var(--card-info-pt-font), sans-serif;
-            }
+          ${getCSS({ frame, host })}
 
         </style>
         
         <title>New Card</title>
       </head>
       <body>
-        <div class="card">
+        <div class="${clsx("card", {
+          "--phyrexian": isPhyrexian,
+        })}">
           <div class="card-art-holder"></div>
           <div class="card-frame">
             <div class="card-header">
               <span class="card-name">${name}</span>
-              <div class="card-mana-cost">${manaCost}</div>
+              <div class="card-mana-cost">${
+                manaCost ? textToManaSymbolsString(manaCost, host) : ""
+              }</div>
             </div>
             <div class="card-art"></div>
             <div class="card-type">
               <span>${type}</span>
             </div>
             <div class="card-info">
-              <span class="card-info-description">${description}</span>
+              <span class="card-info-description">${textToManaSymbolsString(description, host)}</span>
               <span class="card-info-flavor">${flavor}</span>
               <div class="card-info-pt">
                 <span class="card-info-pt-text">${pt}</span>

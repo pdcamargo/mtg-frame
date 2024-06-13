@@ -40,6 +40,9 @@ export default function CreateCard() {
     urlParams.append("description", data.description);
     urlParams.append("flavor", data.flavor);
     urlParams.append("frame", "/img/frames/dmu/stainedGlass/g.png");
+    urlParams.append("isPhyrexian", "false");
+    urlParams.append("manaCost", "{w}{u}{b}{r}{g}");
+    urlParams.append("type", "Creature - Human Wizard");
 
     const finalUrl = `/api/generate-card?${urlParams.toString()}`;
 
@@ -60,23 +63,31 @@ export default function CreateCard() {
       <div className="max-w-[1024px] p-6 mx-auto">
         <h1>Create a Card</h1>
         <p>Use the form below to create a new card.</p>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <label>
-            Card Name:
-            <input type="text" {...register("name")} />
-          </label>
-          <label>
-            Card Text:
-            <textarea {...register("description")} />
-          </label>
-          <label>
-            Flavor Text:
-            <textarea {...register("flavor")} />
-          </label>
-          <Button type="submit">Create Card</Button>
-        </form>
 
-        <div id="preview"></div>
+        <div className="flex gap-10">
+          <form
+            className="flex flex-col gap-2 flex-1"
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <label className="flex flex-col gap-1">
+              Card Name:
+              <input type="text" {...register("name")} />
+            </label>
+            <label className="flex flex-col gap-1">
+              Card Text:
+              <textarea {...register("description")} />
+            </label>
+            <label className="flex flex-col gap-1">
+              Flavor Text:
+              <textarea {...register("flavor")} />
+            </label>
+            <Button type="submit">Create Card</Button>
+          </form>
+
+          <div className="w-[50%]">
+            <div id="preview" className="bg-gray-600 p-5"></div>
+          </div>
+        </div>
       </div>
     </div>
   );
