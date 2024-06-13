@@ -115,7 +115,7 @@ function textToManaSymbolsString(text: string) {
   return text;
 }
 
-export default function Home() {
+const Home: React.FC = () => {
   const cost = "{u}{u}{b}";
 
   const cardDescription =
@@ -188,4 +188,6 @@ export default function Home() {
       </div>
     </div>
   );
-}
+};
+
+export default Home;

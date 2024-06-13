@@ -17,7 +17,7 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-export default function CreateCard() {
+const CreateCard: React.FC = () => {
   const [previewImg, setPreviewImg] = useState<string | null>(null);
 
   const { register, handleSubmit } = useForm<FormData>({
@@ -91,4 +91,6 @@ export default function CreateCard() {
       </div>
     </div>
   );
-}
+};
+
+export default CreateCard;

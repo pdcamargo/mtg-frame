@@ -6,7 +6,9 @@ import { getHTML } from "./html";
 
 export async function GET(request: NextRequest) {
   // Parse the request URL to get the query parameters
-  const { searchParams, host } = new URL(request.url);
+  const { searchParams, origin } = new URL(request.url);
+
+  const host = origin;
 
   const name = searchParams.get("name") || "";
   const manaCost = searchParams.get("manaCost") || "";

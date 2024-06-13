@@ -9,7 +9,7 @@ import {
 } from "@nextui-org/react";
 import Link from "next/link";
 
-export const Header = () => {
+export const Header: React.FC = () => {
   return (
     <Navbar isBordered>
       <NavbarBrand>
