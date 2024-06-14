@@ -1,8 +1,8 @@
 // app/api/generate-image/route.js
 import { NextRequest, NextResponse } from "next/server";
 
-import puppeteer from "puppeteer";
 import { getHTML } from "./html";
+import { getPage } from "./get-browse";
 
 export async function GET(request: NextRequest) {
   // Parse the request URL to get the query parameters
@@ -20,9 +20,7 @@ export async function GET(request: NextRequest) {
   const frame = searchParams.get("frame") || "";
   const isPhyrexian = searchParams.get("isPhyrexian") === "true";
 
-  // Create a new instance of the Puppeteer browser
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
+  const page = await getPage();
 
   await page.setViewport({
     width: 1500,
@@ -47,11 +45,14 @@ export async function GET(request: NextRequest) {
   // Set the content of the page
   await page.setContent(htmlContent);
 
+  // wait for all 3rd party scripts to load
+  await page.waitForSelector("img");
+
   // Generate a screenshot of the page
   const screenshotBuffer = await page.screenshot();
 
   // Close the browser
-  await browser.close();
+  await page.close();
 
   // Create a response with the image buffer
   return new NextResponse(screenshotBuffer, {

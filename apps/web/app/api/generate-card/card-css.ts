@@ -2,7 +2,15 @@ const joinUrl = (url: string, host: string) => {
   return `${host}${url}`;
 };
 
-export const getCSS = ({ frame, host }: { frame: string; host: string }) => {
+export const getCSS = ({
+  frame,
+  host,
+  art,
+}: {
+  frame: string;
+  host: string;
+  art: string;
+}) => {
   return `
     body, html {
         height: 2100px;
@@ -18,8 +26,8 @@ export const getCSS = ({ frame, host }: { frame: string; host: string }) => {
 
         .card {
             --card-border-size: 1.45cm;
-            --card-name-size: 60px;
-            --card-type-size: 50px;
+            --card-name-size: 65px;
+            --card-type-size: 58px;
             --card-name-color: #000;
             --card-type-color: #000;
             --card-info-color: #000;
@@ -62,6 +70,13 @@ export const getCSS = ({ frame, host }: { frame: string; host: string }) => {
             padding-inline: calc(var(--card-border-size) + 4mm);
             height: 105px;
             margin-top: var(--card-border-size);
+        }
+
+        .card-header-mana-icon {
+            border-radius: 100%;
+            box-shadow: 0 2px 2px 2px #000;
+            width: 55px !important;
+            height: 55px !important;
         }
 
         .card-name {
@@ -110,6 +125,10 @@ export const getCSS = ({ frame, host }: { frame: string; host: string }) => {
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            ${art ? `background-image: url(${art});` : ""}
         }
 
         .card-info {
@@ -148,12 +167,14 @@ export const getCSS = ({ frame, host }: { frame: string; host: string }) => {
             height: 140px;
             bottom: calc(var(--card-border-size) * -1);
             right: var(--card-border-size);
+            background-image: url(${joinUrl("/img/frames/m15/ub/pt/g.png", host)});
         }
 
         .card-info-pt-text {
             padding-left: 0.52cm;
             font-weight: bold;
             font-family: var(--card-info-pt-font), sans-serif;
+            font-size: 64px;
         }
     `;
 };

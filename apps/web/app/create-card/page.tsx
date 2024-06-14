@@ -13,19 +13,27 @@ const schema = z.object({
   name: z.string().default(""),
   description: z.string().default(""),
   flavor: z.string().default(""),
+  art: z.string().default(""),
+  manaCost: z.string().default(""),
+  type: z.string().default(""),
+  pt: z.string().default(""),
 });
 
 type FormData = z.infer<typeof schema>;
 
 const CreateCard: React.FC = () => {
-  const [previewImg, setPreviewImg] = useState<string | null>(null);
-
   const { register, handleSubmit } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      name: "My Card name",
-      description: "my Card Description",
-      flavor: "My Card Flavor Text",
+      name: "Green Dragon",
+      description: `Flying
+  Poison Breath - When Green Dragon enters the battlefield, until end of turn, whenever a creature an opponent controls is dealt damage, destroy it.`,
+      flavor:
+        "Green dragons take special pleasure in corrupting the good-hearted.",
+      art: "https://i.imgur.com/2z1k4Pp.jpeg",
+      manaCost: "{4}{g}{g}",
+      type: "Creature - Dragon",
+      pt: "4/4",
     },
   });
 
@@ -36,13 +44,13 @@ const CreateCard: React.FC = () => {
 
     const urlParams = new URLSearchParams();
 
-    urlParams.append("name", data.name);
-    urlParams.append("description", data.description);
-    urlParams.append("flavor", data.flavor);
-    urlParams.append("frame", "/img/frames/dmu/stainedGlass/g.png");
+    Object.entries(data).forEach(([key, value]) => {
+      urlParams.append(key, value);
+    });
+
+    urlParams.append("frame", "/img/frames/m15/ub/regular/g.png");
     urlParams.append("isPhyrexian", "false");
-    urlParams.append("manaCost", "{w}{u}{b}{r}{g}");
-    urlParams.append("type", "Creature - Human Wizard");
+    urlParams.append("timestamp", Date.now().toString());
 
     const finalUrl = `/api/generate-card?${urlParams.toString()}`;
 
@@ -81,6 +89,21 @@ const CreateCard: React.FC = () => {
               Flavor Text:
               <textarea {...register("flavor")} />
             </label>
+            <label className="flex flex-col gap-1">
+              Card Art URL:
+              <textarea {...register("art")} />
+            </label>
+
+            <label className="flex flex-col gap-1">
+              Mana Cost:
+              <input type="text" {...register("manaCost")} />
+            </label>
+
+            <label className="flex flex-col gap-1">
+              Card Type:
+              <input type="text" {...register("type")} />
+            </label>
+
             <Button type="submit">Create Card</Button>
           </form>
 

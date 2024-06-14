@@ -88,12 +88,13 @@ const textToMana = {
   "{x}": "/img/manaSymbols/x.svg",
   "{y}": "/img/manaSymbols/y.svg",
   "{z}": "/img/manaSymbols/z.svg",
+  "{t}": "/img/manaSymbols/t.svg",
 };
 
 /**
  * Similar to textToManaSymbols, but this function will return the mana symbols as HTML image strings and it will keep the text in between the mana symbols
  */
-function textToManaSymbolsString(text: string, host: string) {
+function textToManaSymbolsString(text: string, host: string, className = "") {
   const regex = /{[0-9a-z]+}/g;
   const matches = text.match(regex);
   const splitText = text.split(regex);
@@ -103,7 +104,7 @@ function textToManaSymbolsString(text: string, host: string) {
     for (let i = 0; i < splitText.length; i++) {
       result += splitText[i];
       if (matches[i]) {
-        result += `<img style="display:inline-block;" width="40" height="40" src="${joinUrl(textToMana[matches[i] as keyof typeof textToMana], host)}" alt="Mana Symbol"/>`;
+        result += `<img class="${className}" style="display:inline-block;" width="40" height="40" src="${joinUrl(textToMana[matches[i] as keyof typeof textToMana], host)}" alt="Mana Symbol"/>`;
       }
     }
     return result;
@@ -139,6 +140,11 @@ export const getHTML = async ({
   //   const imageBuffer = await image.arrayBuffer();
 
   const base64Image = "";
+  console.log({
+    test: clsx({
+      "background-image:url('${art}')": !!art,
+    }),
+  });
 
   return `
     <!DOCTYPE html>
@@ -153,7 +159,7 @@ export const getHTML = async ({
             --font-phyrexian: 'MTG - Phyrexian';
           }
 
-          ${getCSS({ frame, host })}
+          ${getCSS({ frame, host, art })}
 
         </style>
         
@@ -163,12 +169,18 @@ export const getHTML = async ({
         <div class="${clsx("card", {
           "--phyrexian": isPhyrexian,
         })}">
-          <div class="card-art-holder"></div>
+          <img class="card-art-holder" src="${art}" alt="Card Art" />
           <div class="card-frame">
             <div class="card-header">
               <span class="card-name">${name}</span>
               <div class="card-mana-cost">${
-                manaCost ? textToManaSymbolsString(manaCost, host) : ""
+                manaCost
+                  ? textToManaSymbolsString(
+                      manaCost,
+                      host,
+                      "card-header-mana-icon"
+                    )
+                  : ""
               }</div>
             </div>
             <div class="card-art"></div>
